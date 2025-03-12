@@ -14,15 +14,28 @@ namespace SerializerReflection
 
             var testClass = new F().Get();
 
-            Console.WriteLine(SerializationToString.Serialize(testClass));
+           
 
             foreach (int i in collectionSizes)
             {
-                Logger.WriteTitle($"_______________Расчет сериализации  {i.ToString("0,0")} раз_______________");
+                Logger.WriteTitle($"_______________Расчет сериализации тестового класса  {i.ToString("0,0")} раз_______________");
 
                 TimingControl<string>.MeasureTime(() => SerializationToString.Serialize(testClass),i, "Расчет сериализации с помощью Reflection");
 
                 TimingControl<string>.MeasureTime(() => JsonSerializer.Serialize(testClass), i, "Расчет сериализации с помощью JsonSerializer");
+
+                Console.WriteLine(SerializationToString.Serialize(testClass));
+
+                // указываем путь к файлу csv
+                string pathCsvFile = "Test.csv";
+
+                var rowsToDeserialize = File.ReadAllLines(pathCsvFile);
+                var myCsvSerializer = new SerializationToCsv(",");
+                var t = myCsvSerializer.Deserialize<Dev>(rowsToDeserialize);
+
+                TimingControl<Dev>.MeasureTime(() => myCsvSerializer.Deserialize<Dev>(rowsToDeserialize), i, "Расчет десериализации с помощью SerializationToCsv");
+                
+                Console.WriteLine(SerializationToString.Serialize(myCsvSerializer.Deserialize<Dev>(rowsToDeserialize)));
             }
         }
     }
