@@ -8,7 +8,7 @@ namespace SerializerReflection
         {
             var testClass = new F().Get();
 
-            Console.WriteLine(MySerializer.Serialize(testClass));
+            Console.WriteLine(SerializationToString.Serialize(testClass));
         }
     }
 }
